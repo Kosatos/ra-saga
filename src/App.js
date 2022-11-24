@@ -1,58 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
+import SearchInput from './components/search/SearchInput'
+import SearchItems from './components/search/SearchItems'
+import ServicesItems from './components/services/ServicesItems'
+import ServiceDetail from './components/services/ServiceDetail'
+
+import { getServicesRequest } from './app/slices/servicesSlice'
+import { useDispatch } from 'react-redux'
 
 function App() {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getServicesRequest())
+  }, [dispatch])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className='container max-w-[991px] mx-auto px-4 py-10'>
+      <h2 className='py-5 text-3xl text-center font-bold'>Поиск</h2>
+      <hr />
+      <div className='py-4'>
+        <SearchInput></SearchInput>
+        <SearchItems></SearchItems>
+      </div>
+
+      <h2 className='py-5 text-3xl text-center font-bold'>Список и детали</h2>
+      <hr />
+      <div className='py-4 flex item-center'>
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <div className='flex gap-40 w-full'>
+                <ServicesItems />
+                <Outlet />
+              </div>
+            }
           >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+            <Route path='/:id/details' element={<ServiceDetail />} />
+          </Route>
+        </Routes>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
